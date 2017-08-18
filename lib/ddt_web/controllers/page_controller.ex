@@ -4,6 +4,7 @@ defmodule DdtWeb.PageController do
   plug Plugs.RecordMetrics
 
   def index(conn, _params) do
+    :timer.sleep(:rand.uniform(500))
     render conn, "index.html"
   end
 end
