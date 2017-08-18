@@ -1,6 +1,7 @@
 defmodule Plugs.RecordMetrics do
-  alias Plug.Conn, as: C
+  require Logger
 
+  alias Plug.Conn, as: C
   @behaviour Plug
 
   def init(opts), do: opts
@@ -23,6 +24,9 @@ defmodule Plugs.RecordMetrics do
   end
 
   defp get_request_id(conn) do
-    C.get_req_header(conn, @request_id_header)
+    case C.get_req_header(conn, @request_id_header) do
+      [req_id | _] -> req_id
+      [] -> Logger.error("No request ID")
+    end
   end
 end
