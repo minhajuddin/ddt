@@ -20,7 +20,7 @@ config :logger, :console,
 
 config :ex_statsd,
        host: "localhost",
-       port: 1234, # default is 8125
+       port: 8125, # default is 8125
        namespace: "hub",
        tags: ["server:h01"]
 
