@@ -40,7 +40,7 @@ defmodule Ddt.Mixfile do
       {:cowboy, "~> 1.0"},
 
       {:ex_statsd, github: "CargoSense/ex_statsd"},
-
+      {:dbg, github: "fishcakez/dbg"},
     ]
   end
 end
