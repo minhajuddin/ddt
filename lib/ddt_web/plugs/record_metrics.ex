@@ -18,7 +18,7 @@ defmodule Plugs.RecordMetrics do
 
   defp report_to_statsd(conn) do
     request_id = get_request_id conn
-    MetricAggregator.record request_id, :resp_time
+    MetricAggregator.record request_id, :resp_time, %{path: conn.request_path}
     MetricAggregator.aggregate_and_report request_id
     conn
   end

@@ -16,7 +16,9 @@ defmodule MetricAggregator do
       [{_, metrics}] -> metrics
       _ -> %{}
     end
-    Map.put(metrics, event, {DateTime.utc_now, meta})
+
+    metrics = Map.put(metrics, event, {DateTime.utc_now, meta})
+    :ets.insert(@metrics_tab, {request_id, metrics})
   end
 
   def aggregate_and_report(request_id) do
