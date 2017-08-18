@@ -5,18 +5,24 @@ defmodule Plugs.RecordMetrics do
 
   def init(opts), do: opts
 
+  @request_id_header "x-request-id"
   def call(conn, _opts) do
     conn
-    |> C.put_private(:plug_record_metrics, %{req_start: DateTime.utc_now})
+    |> get_request_id
+    |> MetricAggregator.start_recording
+
+    conn
     |> C.register_before_send(&report_to_statsd/1)
   end
 
   defp report_to_statsd(conn) do
-    req_start = conn.private[:plug_record_metrics][:req_start]
-    if req_start do
-      DateTime.diff(DateTime.utc_now, req_start, :milliseconds)
-      |> ExStatsD.timer("resp_time", tags: ["path:#{conn.request_path}"])
-    end
+    request_id = get_request_id conn
+    MetricAggregator.record request_id, :resp_time
+    MetricAggregator.aggregate_and_report request_id
     conn
+  end
+
+  defp get_request_id(conn) do
+    C.get_req_header(conn, @request_id_header)
   end
 end
