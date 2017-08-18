@@ -20,7 +20,7 @@ defmodule DdtWeb.PageController do
   require Logger
   @request_id_header "x-request-id"
   defp get_request_id(conn) do
-    case C.get_resp_header(conn, @request_id_header) do
+    case Plug.Conn.get_resp_header(conn, @request_id_header) do
       [req_id | _] -> req_id
       [] -> Logger.error("No request ID")
     end
